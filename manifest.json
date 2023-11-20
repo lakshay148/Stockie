@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "Date Printer",
+  "description": "This extension prints today's date",
+  "version": "1.0",
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "stockmarket.png",
+      "48": "stockmarket.png",
+      "128": "stockmarket.png"
+    }
+  },
+  "permissions": ["activeTab"]
+}
