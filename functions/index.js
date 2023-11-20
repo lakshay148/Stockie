@@ -14,11 +14,12 @@ const axios = require('axios');
 
 const cors = require('cors')({origin: true});
 
+//API used for fetching cricket scores : https://cricketdata.org/member.aspx
 exports.allmatches = onRequest((request, response) => {
   cors(request, response, async () => {
     const apiKey = '69711a85-0124-4828-b32e-658dec817d19';
     const url = `https://api.cricapi.com/v1/currentMatches?apikey=${apiKey}`;
-    logger.info('Lakshay: ' + url);
+
     // response.send({"lakshay": "test"});
     try {
         const apiResponse = await axios.get(url);
