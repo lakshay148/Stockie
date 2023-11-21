@@ -1,20 +1,9 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
-
 const {onRequest} = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
-// const fetch = require('node-fetch');
 const axios = require('axios');
-
 const cors = require('cors')({origin: true});
 
-//API used for fetching cricket scores : https://cricketdata.org/member.aspx
+//API dashboard used for fetching cricket scores : https://cricketdata.org/member.aspx
 exports.allmatches = onRequest((request, response) => {
   cors(request, response, async () => {
     const apiKey = '69711a85-0124-4828-b32e-658dec817d19';
@@ -38,7 +27,37 @@ exports.allmatches = onRequest((request, response) => {
 
 exports.stockprices = onRequest((request, response) => {
     cors(request, response, async () => {
-        response.send({"stock": "price"});
-
+        let stockAndPrices = await getStockPrices(stockSymbols);
+        response.send(stockAndPrices);
     });
   });
+
+  async function getStockPrices(symbols) {
+    const stockAndPrices = [];
+
+    for (const symbol of symbols) {
+        try {
+            logger.log('Fetching stock price for symbol:', symbol);
+            const response = await axios.get(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1h`);
+            const data = response.data;
+
+            const stockData = data.chart.result[0];
+
+            const openPrice = stockData.indicators.quote[0].open[0];
+            const closePrice = stockData.indicators.quote[0].close[0];
+
+            const priceChange = closePrice - openPrice;
+            const priceChangePercentage = (priceChange / openPrice) * 100;
+
+            console.log(`Price Change for ${symbol}: ${priceChange}`);
+            console.log(`Price Change Percentage for ${symbol}: ${priceChangePercentage}%`);
+            stockAndPrices.push({symbol, closePrice, priceChange, priceChangePercentage});
+            
+        } catch (error) {
+            console.error('Error fetching stock price for symbol:', symbol, error);
+        }
+    }
+    return stockAndPrices;
+}
+// const stockSymbols = ['NYKAA.NS'];
+const stockSymbols = ['NYKAA.NS', 'PAYTM.NS', 'BSE-SMLCAP.BO', 'BSE-MIDCAP.BO', '^BSESN'];
