@@ -38,7 +38,7 @@ exports.stockprices = onRequest((request, response) => {
     for (const symbol of symbols) {
         try {
             logger.log('Fetching stock price for symbol:', symbol);
-            const response = await axios.get(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1h`);
+            const response = await axios.get(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=5m`);
             const data = response.data;
 
             const stockData = data.chart.result[0];
