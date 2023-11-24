@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Date Printer",
-  "description": "This extension prints today's date",
+  "name": "Stockie",
+  "description": "Get your favorite stocks tracking handy in one place",
   "version": "1.0",
   "browser_action": {
     "default_popup": "popup.html",
